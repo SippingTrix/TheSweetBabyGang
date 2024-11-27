@@ -61,6 +61,7 @@ const MWtitles = () => {
     "Handsome",
     "Brilliant",
     "Comedian",
+    "Oscar contender",
     "World Renowned DEI Consultant",
     "Acclaimed Bottled Water Critic",
     "Actor",
