@@ -16,7 +16,7 @@ import MWShow from "../media/mwshowcard.png";
 import AKShow from "../media/akshowcard.png";
 import Backstage from "../media/backstage.png";
 import AIR from "../media/air.png";
-import OOC from "../media/outofcontext.jpg";
+// import OOC from "../media/outofcontext.jpg";
 
 const useStyles = makeStyles({
   root: {
@@ -118,12 +118,12 @@ const App = () => {
       url: "/mkfaceoff"
     }
   ];
-  const OOCLinks = [
-    {
-      text: "Your Favorite DW Hosts Taken Out Of Context",
-      url: "/dwlibraryvideos"
-    }
-  ];
+  // const OOCLinks = [
+  //   {
+  //     text: "Your Favorite DW Hosts Taken Out Of Context",
+  //     url: "/dwlibraryvideos"
+  //   }
+  // ];
   const image3Links = [
     {
       text: "Transcripts for the Andrew Klavan Show: Klavanon is real!",
@@ -158,12 +158,12 @@ const App = () => {
         description="Transcripts for the show will be updated weekly."
         links={image3Links}
       />
-      <ImageCard
+      {/* <ImageCard
         imageUrl={OOC}
         title="Daily Wire Some Context"
         description="This section is a tribute to X User RealTruthCactus."
         links={OOCLinks}
-      />
+      /> */}
       <ImageCard
         imageUrl={Backstage}
         title="Daily Wire Backstage"
