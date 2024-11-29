@@ -96,12 +96,22 @@ const Navbar = () => {
       title: "Matt Walsh",
       items: [
         { name: "Matt Walsh Transcripts", link: "/transcript" },
-        { name: "Matt Walsh Daily Cancellation", link: "/cancelled" }
+        { name: "Matt Walsh Daily Cancellation", link: "/cancelled" },
+        { name: "Sweet Baby Library", link: "/library" },
+        { name: "Acceptable Reasons Men Can Cry", link: "/mw" },
+        { name: "Matt Walsh's Prestigious Titles", link: "/mwtitles" }
       ]
     },
     {
       title: "Michael Knowles",
-      items: [{ name: "Michael Knowles Transcripts", link: "/mktranscripts" }]
+      items: [
+        { name: "Michael Knowles Transcripts", link: "/mktranscripts" },
+        {
+          name: "Michael Knowles' Dank Names for Sin Spinach",
+          link: "/sinspinach"
+        },
+        { name: "Michael Knowles Face Off", link: "/mkfaceoff" }
+      ]
     },
     {
       title: "Andrew Klavan",
