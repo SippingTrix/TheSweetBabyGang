@@ -7,7 +7,7 @@ import {
   Typography,
   Grid
 } from "@material-ui/core";
-import Judge from "../media/honorablewalsh.jpg";
+import Judge from "../../media/honorablewalsh.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -19,7 +19,7 @@ import {
   DialogContent,
   DialogActions
 } from "@material-ui/core";
-import SearchHelp from "./searchHelp";
+import SearchHelp from "../searchHelp";
 
 const useStyles = makeStyles((theme) => ({
   episodeText: {

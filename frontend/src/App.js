@@ -1,19 +1,19 @@
 import React from "react";
 import Home from "./components/Home";
-import Transcript from "./components/walshTranscript";
+import Transcript from "./components/MW/walshTranscript";
 import Books from "./components/books";
 import { Routes, Route } from "react-router"; // Correct import
-import Navbar from "./components/navbar";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import MW from "./components/mw";
+import Navbar from "./components/navbar";
+import MW from "./components/MW/cry";
 import Library from "./components/library";
-import KnowlesTranscript from "./components/knowlesTranscript";
+import KnowlesTranscript from "./components/MK/knowlesTranscript";
 import MKPotlist from "./components/MK/mkpotlist";
-import MWtitles from "./components/mwtitles";
+import MWtitles from "./components/MW/mwtitles";
 import MKFaceoff from "./components/MK/mkfaceoff";
-import Cancelled from "./components/dailycancellation";
+import Cancelled from "./components/MW/dailycancellation";
 import Backstage from "./components/Backstage/backstageTranscripts";
-import KlavanTranscript from "./components/klavanTranscripts";
+import KlavanTranscript from "./components/AK/klavanTranscripts";
 import DWOOC from "./components/outofcontext";
 import DWSomeContext from "./components/dwsomecontext"; // Import the new component
 import DWVideo from "./components/DWVideos";

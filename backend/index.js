@@ -5,6 +5,10 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const cors = require("cors");
 const routes = require("./routes/api");
+const mkroutes = require("./routes/mkapi");
+const akroutes = require("./routes/akapi");
+const miscroutes = require("./routes/miscapi");
+
 const videoRoutes = require("./routes/video"); // Import video routes
 
 // Port
@@ -42,6 +46,10 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api", routes);
+app.use("/api", mkroutes);
+app.use("/api", miscroutes);
+app.use("/api", akroutes);
+
 app.use("/api", videoRoutes); // Add video routes to the API
 
 app.use((err, req, res, next) => {

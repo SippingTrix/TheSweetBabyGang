@@ -140,7 +140,7 @@ const App = () => {
   return (
     <div className={classes.root}>
       <ImageCard
-        imageUrl={AIR}
+        imageUrl={MWShow}
         title="The Matt Walsh Show"
         description="Transcripts and cancellations for the show will be updated weekly."
         links={image1Links}

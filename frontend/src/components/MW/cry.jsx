@@ -7,7 +7,7 @@ import {
   Paper
 } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import CryingBanner from "../media/cryinglist.png";
+import CryingBanner from "../../media/cryinglist.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
