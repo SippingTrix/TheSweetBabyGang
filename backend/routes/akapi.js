@@ -3,6 +3,8 @@ const router = express.Router();
 const AKTranscript = require("../models/aktranscripts");
 const AKTitle = require("../models/aktitles");
 
+const ITEMS_PER_PAGE = 200; // Adjust the number of items per page as needed
+
 router.get("/aktranscripts/meta", async function (req, res, next) {
   try {
     const searchQuery = req.query.query || ""; // Get the search query from the request
