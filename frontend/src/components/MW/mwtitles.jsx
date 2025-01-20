@@ -1,18 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  List,
-  ListItem,
-  ListItemText,
   Typography,
-  Grid
+  Grid,
+  Card,
+  CardContent,
+  CircularProgress,
+  IconButton,
+  TextField,
+  Button
 } from "@material-ui/core";
+import { Delete, Edit, Check, Close } from "@material-ui/icons";
 import Judge from "../../media/honorablewalsh.jpg";
+import axios from "axios";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    maxWidth: 800,
+    maxWidth: 1200,
     margin: "auto",
     marginBottom: theme.spacing(2)
   },
@@ -36,68 +42,138 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "100%",
     borderRadius: "50%"
   },
-  listContainer: {
-    marginTop: theme.spacing(2)
-  },
-  listItem: {
-    borderRadius: theme.shape.borderRadius,
-    marginBottom: theme.spacing(1),
-    boxShadow: theme.shadows[1],
-    transition: "box-shadow 0.3s", // Adding transition effect
+  card: {
+    minWidth: 275,
+    margin: theme.spacing(2),
+    textAlign: "center",
+    boxShadow: theme.shadows[3],
     "&:hover": {
-      boxShadow: theme.shadows[4] // Increasing shadow on hover
-    }
+      boxShadow: theme.shadows[6]
+    },
+    position: "relative"
   },
-  listItemBackground: {
-    padding: theme.spacing(1, 2), // Adding padding for better visibility
-    borderRadius: theme.shape.borderRadius
+  cardContent: {
+    padding: theme.spacing(2)
+  },
+  iconButtonRight: {
+    position: "absolute",
+    top: theme.spacing(1),
+    right: theme.spacing(1)
+  },
+  iconButtonLeft: {
+    position: "absolute",
+    top: theme.spacing(1),
+    left: theme.spacing(1)
+  },
+  editField: {
+    marginBottom: theme.spacing(2)
+  },
+  addTitleContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: theme.spacing(2)
+  },
+  addTitleInput: {
+    marginRight: theme.spacing(1)
   }
 }));
 
-const MWtitles = () => {
+const MWtitles = ({ token }) => {
   const classes = useStyles();
+  const [titles, setTitles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(null);
+  const [newTitle, setNewTitle] = useState("");
+  const [addTitle, setAddTitle] = useState("");
 
-  const listItems = [
-    "Handsome",
-    "Passably Handsome - NashvilleScene",
-    "Brilliant",
-    "Comedian",
-    "Oscar contender",
-    "World Renowned DEI Consultant",
-    "Acclaimed Bottled Water Critic",
-    "Actor",
-    "Alpaca Groomer",
-    "America’s Highest Legal Authority",
-    "Beekeeping influencer",
-    "Biologist",
-    "Celebrated Podcast Host",
-    "Celebrated banjo player",
-    "Country's Leading Cult Leader",
-    "Dancer",
-    "Dancing With The Stars Contestant",
-    "Fashion Guru",
-    "Father",
-    "Husband",
-    "Alien Enthusiast",
-    "Documentarian",
-    "Number 1 Best Selling Children's LGBTQ+ Author",
-    "Philanthropist",
-    "Potential Pulitzer Nominee",
-    "Proud former Virginia resident",
-    "Son",
-    "The Honorable Matt Walsh",
-    "Theocratic Fascist Dictator",
-    "Translucent Rights Advocate",
-    "Transphobe of the Year",
-    "Tyrant",
-    "Voice Actor",
-    "Women’s Studies Scholar",
-    "Zookeeper"
-  ];
+  useEffect(() => {
+    const fetchTitles = async () => {
+      try {
+        const response = await axios.get("http://localhost:9000/api/bioTitles");
+        setTitles(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching titles:", error);
+        setLoading(false);
+      }
+    };
 
-  const mid = Math.ceil(listItems.length / 2);
-  const leftColumn = listItems.slice(0, mid);
-  const rightColumn = listItems.slice(mid);
+    fetchTitles();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:9000/api/bioTitles/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTitles(titles.filter((title) => title._id !== id));
+    } catch (error) {
+      console.error("Error deleting title:", error);
+    }
+  };
+
+  const handleEdit = (id, currentTitle) => {
+    setEditing(id);
+    setNewTitle(currentTitle);
+  };
+
+  const handleSave = async (id) => {
+    try {
+      await axios.put(
+        `http://localhost:9000/api/bioTitles/${id}`,
+        { title: newTitle },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      setTitles(
+        titles.map((title) =>
+          title._id === id ? { ...title, title: newTitle } : title
+        )
+      );
+      setEditing(null);
+      setNewTitle("");
+    } catch (error) {
+      console.error("Error updating title:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditing(null);
+    setNewTitle("");
+  };
+
+  const handleAddTitle = async () => {
+    if (!addTitle) return;
+    try {
+      const response = await axios.post(
+        "http://localhost:9000/api/bioTitles",
+        { title: addTitle },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      setTitles([...titles, response.data]);
+      setAddTitle("");
+    } catch (error) {
+      console.error("Error adding title:", error);
+    }
+  };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const reorderedTitles = Array.from(titles);
+    const [removed] = reorderedTitles.splice(result.source.index, 1);
+    reorderedTitles.splice(result.destination.index, 0, removed);
+
+    setTitles(reorderedTitles);
+  };
+
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   return (
     <div className={classes.root}>
@@ -119,34 +195,100 @@ const MWtitles = () => {
           The Honorable Matt Walsh's Official Titles
         </a>
       </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={6}>
-          <div className={classes.listContainer}>
-            <List>
-              {leftColumn.map((item, index) => (
-                <ListItem key={index} className={classes.listItem}>
-                  <div className={classes.listItemBackground}>
-                    <ListItemText primary={item} />
-                  </div>
-                </ListItem>
+      {token && (
+        <div className={classes.addTitleContainer}>
+          <TextField
+            variant="outlined"
+            placeholder="Add a new title"
+            value={addTitle}
+            onChange={(e) => setAddTitle(e.target.value)}
+            className={classes.addTitleInput}
+          />
+          <Button variant="contained" color="primary" onClick={handleAddTitle}>
+            Add Title
+          </Button>
+        </div>
+      )}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="titles">
+          {(provided) => (
+            <Grid
+              container
+              spacing={3}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {titles.map((title, index) => (
+                <Draggable
+                  key={title._id}
+                  draggableId={title._id}
+                  index={index}
+                  isDragDisabled={!token}
+                >
+                  {(provided) => (
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      md={3}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <Card className={classes.card}>
+                        <CardContent className={classes.cardContent}>
+                          {editing === title._id ? (
+                            <>
+                              <TextField
+                                variant="outlined"
+                                fullWidth
+                                value={newTitle}
+                                onChange={(e) => setNewTitle(e.target.value)}
+                                className={classes.editField}
+                              />
+                              <IconButton onClick={() => handleSave(title._id)}>
+                                <Check />
+                              </IconButton>
+                              <IconButton onClick={handleCancel}>
+                                <Close />
+                              </IconButton>
+                            </>
+                          ) : (
+                            <>
+                              <Typography variant="h6">
+                                {title.title}
+                              </Typography>
+                              {token && (
+                                <>
+                                  <IconButton
+                                    className={classes.iconButtonLeft}
+                                    onClick={() => handleDelete(title._id)}
+                                  >
+                                    <Delete />
+                                  </IconButton>
+                                  <IconButton
+                                    className={classes.iconButtonRight}
+                                    onClick={() =>
+                                      handleEdit(title._id, title.title)
+                                    }
+                                  >
+                                    <Edit />
+                                  </IconButton>
+                                </>
+                              )}
+                            </>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  )}
+                </Draggable>
               ))}
-            </List>
-          </div>
-        </Grid>
-        <Grid item xs={6}>
-          <div className={classes.listContainer}>
-            <List>
-              {rightColumn.map((item, index) => (
-                <ListItem key={index} className={classes.listItem}>
-                  <div className={classes.listItemBackground}>
-                    <ListItemText primary={item} />
-                  </div>
-                </ListItem>
-              ))}
-            </List>
-          </div>
-        </Grid>
-      </Grid>
+              {provided.placeholder}
+            </Grid>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };

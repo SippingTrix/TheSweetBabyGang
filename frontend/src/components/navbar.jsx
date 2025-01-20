@@ -14,7 +14,7 @@ import {
   Container,
   Grid
 } from "@material-ui/core";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Logo from "../media/dwlogo.png";
@@ -70,9 +70,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Navbar = () => {
+const Navbar = ({ token, handleLogout }) => {
   const classes = useStyles();
   const location = useLocation();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isActive = (path) => {
@@ -122,6 +123,30 @@ const Navbar = () => {
       items: [{ name: "Backstage Transcripts", link: "/backstage" }]
     }
   ];
+
+  if (token) {
+    menuItems.push({
+      title: "Admin",
+      items: [
+        {
+          name: "Admin Page",
+          link: "/admin"
+        },
+        {
+          name: "Cancelled Admin Page",
+          link: "/cancelledadmin"
+        },
+        {
+          name: "Logout",
+          link: "/login",
+          onClick: () => {
+            handleLogout();
+            navigate("/login");
+          }
+        }
+      ]
+    });
+  }
 
   return (
     <>
@@ -179,7 +204,10 @@ const Navbar = () => {
                         key={item.link}
                         component={Link}
                         to={item.link}
-                        onClick={closeMenu}
+                        onClick={() => {
+                          closeMenu();
+                          if (item.onClick) item.onClick();
+                        }}
                         className={isActive(item.link)}
                       >
                         {item.name}
