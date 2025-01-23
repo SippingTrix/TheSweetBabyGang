@@ -90,7 +90,9 @@ const MWtitles = ({ token }) => {
   useEffect(() => {
     const fetchTitles = async () => {
       try {
-        const response = await axios.get("http://localhost:9000/api/bioTitles");
+        const response = await axios.get(
+          "https://the-sweet-baby-gang-backend-git-main-tyler-sowers-projects.vercel.app/api/bioTitles"
+        );
         setTitles(response.data);
         setLoading(false);
       } catch (error) {
@@ -104,9 +106,12 @@ const MWtitles = ({ token }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:9000/api/bioTitles/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await axios.delete(
+        `https://the-sweet-baby-gang-backend-git-main-tyler-sowers-projects.vercel.app/api/bioTitles/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
       setTitles(titles.filter((title) => title._id !== id));
     } catch (error) {
       console.error("Error deleting title:", error);
@@ -121,7 +126,7 @@ const MWtitles = ({ token }) => {
   const handleSave = async (id) => {
     try {
       await axios.put(
-        `http://localhost:9000/api/bioTitles/${id}`,
+        `https://the-sweet-baby-gang-backend-git-main-tyler-sowers-projects.vercel.app/api/bioTitles/${id}`,
         { title: newTitle },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -148,7 +153,7 @@ const MWtitles = ({ token }) => {
     if (!addTitle) return;
     try {
       const response = await axios.post(
-        "http://localhost:9000/api/bioTitles",
+        "https://the-sweet-baby-gang-backend-git-main-tyler-sowers-projects.vercel.app/api/bioTitles",
         { title: addTitle },
         {
           headers: { Authorization: `Bearer ${token}` }
